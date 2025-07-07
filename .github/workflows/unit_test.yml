@@ -20,3 +20,32 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run test
+
+      - name: Read coverage summary
+        id: coverage
+        if: always()
+        run: |
+          echo 'COVERAGE_REPORT<<EOF' >> $GITHUB_ENV
+          cat coverage/coverage.txt >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+            
+          if [ -f jest-results.json ]; then
+            FAILURES=$(jq -r '.testResults[].assertionResults[] | select(.status=="failed") | "- " + .fullName' jest-results.json | xargs -0)
+              if [ -z "$FAILURES" ]; then
+                FAILURES="None 🎉"
+              fi
+          else
+            FAILURES="Test result file not found!"
+          fi
+            
+          echo "FAILED_TESTS<<EOF" >> $GITHUB_ENV
+          echo "$FAILURES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+            
+          THRESHOLDS=$(grep 'coverage threshold' jest.console.txt || true)
+          if [ -z "$THRESHOLDS" ]; then
+            THRESHOLDS="None"
+          fi
+          echo "COVERAGE_THRESHOLDS<<EOF" >> $GITHUB_ENV
+          echo "$THRESHOLDS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV

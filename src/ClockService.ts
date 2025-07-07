@@ -17,8 +17,6 @@ export default class ClockService {
     
     return this.sameDay(startOfWeek1, startOfWeek2);
   }
-
-  //test pr
   
   setIntervalRun(task: () => Promise<void>, errorHandling: (error:any) => void, frequencyInMs: number, condition: () => boolean) {
     setInterval(async () => {
