@@ -18,8 +18,10 @@ module.exports = {
             functions: 50,
             lines: 50,
             statements: 50,
-        }
+        },
     },
-    coverageReporters: [   ["text", { file: "coverage.txt" }] ],
+    coverageReporters: [
+        ["text", { file: "coverage.txt" }]
+    ],
     testMatch: ["<rootDir>/test/**/*.spec.ts"]
 };
